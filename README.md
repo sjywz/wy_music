@@ -17,3 +17,6 @@
 ## react-router-dom
 
 `HashRouter`
+`NavLink`
+
+## redux
