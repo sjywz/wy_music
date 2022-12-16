@@ -1,6 +1,8 @@
 import React from 'react';
 import Slider from '@/components/slider';
 import RecommendList from '@/components/list';
+import Scroll from '@/components/scroll';
+import { Content } from './style'
 
 const bannerList = [1,2,3,4].map (item => {
 	return { 
@@ -20,10 +22,14 @@ const recommendList = [1,2,3,4,5,6,7,8,9,10].map (item => {
 
 const Index = () => {
 	return (
-		<div>
-			<Slider bannerList={bannerList}></Slider>
-			<RecommendList recommendList={recommendList}/>
-		</div>
+		<Content>
+			<Scroll className="list">
+				<div>
+					<Slider bannerList={bannerList}></Slider>
+					<RecommendList recommendList={recommendList}/>
+				</div>
+			</Scroll>
+		</Content>
 	)
 }
 
