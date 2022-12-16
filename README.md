@@ -7,7 +7,9 @@
 
 ## styled-components
 
+`styled`
 `createGlobalStyle`创建全局style
+`keyframes`
 
 ## react-router-config
 
@@ -24,3 +26,5 @@
 ## Ref转发和回调Refs
 
 ## useImperativeHandle/defaultProps
+
+## react-lazyload图片懒加载 -
