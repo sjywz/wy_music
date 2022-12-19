@@ -18,7 +18,7 @@ export const changeEnterLoading = (data) => ({
 });
 
 export const getBannerList = () => {
-	return (dispatch) => {
+	return (dispatch, state) => {
 		getBannerRequest().then(data => {
 			dispatch(changeBannerList(data.banners));
 		}).catch(() => {
