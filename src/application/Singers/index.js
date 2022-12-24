@@ -15,15 +15,16 @@ import {
   refreshMoreHotSingerList
 } from './store/actionCreators';
 import Loading from '@/baseUI/loading';
+import { renderRoutes } from 'react-router-config';
 
 // 渲染函数，返回歌手列表
-const renderSingerList = (singerList) => {
+const renderSingerList = (singerList, enterDetail) => {
   return (
     <List>
       {
         singerList.map((item, index) => {
           return (
-            <ListItem key={item.accountId + "" + index}>
+            <ListItem key={item.accountId + "" + index} onClick={() => enterDetail (item.id)}>
               <div className="img_wrapper">
                 <img src={`${item.picUrl}?param=300x300`} width="100%" height="100%" alt="music" />
               </div>
@@ -61,6 +62,10 @@ const Index = (props) => {
     pullDownRefreshDispatch(category, alpha);
   };
 
+  const enterDetail = (id)  => {
+    props.history.push(`/singers/${id}`);
+  };
+
   useEffect (() => {
     if (!singerList.size) {
       getHotSingerDispatch ();
@@ -90,9 +95,10 @@ const Index = (props) => {
         pullUpLoading={pullUpLoading}
         pullDownLoading={pullDownLoading}
       >
-        {renderSingerList(singerList ? singerList.toJS() : [])}
+        {renderSingerList(singerList ? singerList.toJS() : [], enterDetail)}
       </Scroll>
     </ListContainer>
+    { renderRoutes (props.route.routes) }
   </div>
 }
 
