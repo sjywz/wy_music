@@ -6,6 +6,7 @@ import { Content } from './style'
 import { connect } from "react-redux";
 import * as actionTypes from './store/actionCreators';
 import Loading from '@/baseUI/loading';
+import { renderRoutes } from 'react-router-config';
 
 const Index = (props) => {
 	const { bannerList, recommendList, enterLoading } = props;
@@ -34,6 +35,7 @@ const Index = (props) => {
 					<RecommendList recommendList={recommendListJS} />
 				</div>
 			</Scroll>
+			{ renderRoutes (props.route.routes) }
 		</Content>
 	)
 }
