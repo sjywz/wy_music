@@ -16,9 +16,9 @@ const SongsList = React.forwardRef((props, refs) => {
 	const totalCount = songs.length;
 
 	const selectItem = (e, index) => {
-		changePlayListDispatch (songs);
-		changeSequecePlayListDispatch (songs);
-		changeCurrentIndexDispatch (index);
+		changePlayListDispatch(songs);
+		changeSequecePlayListDispatch(songs);
+		changeCurrentIndexDispatch(index);
 		musicAnimation(e.nativeEvent.clientX, e.nativeEvent.clientY);
 	}
 
@@ -66,17 +66,17 @@ const SongsList = React.forwardRef((props, refs) => {
 });
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    changePlayListDispatch (data){
-      dispatch (changePlayList (data));
-    },
-    changeCurrentIndexDispatch (data) {
-      dispatch (changeCurrentIndex (data));
-    },
-    changeSequecePlayListDispatch (data) {
-      dispatch (changeSequecePlayList (data))
-    }
-  }
+	return {
+		changePlayListDispatch(data) {
+			dispatch(changePlayList(data));
+		},
+		changeCurrentIndexDispatch(data) {
+			dispatch(changeCurrentIndex(data));
+		},
+		changeSequecePlayListDispatch(data) {
+			dispatch(changeSequecePlayList(data))
+		}
+	}
 };
 
 export default connect(null, mapDispatchToProps)(React.memo(SongsList));

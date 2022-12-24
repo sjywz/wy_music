@@ -15,6 +15,8 @@ import { getSongUrl, isEmptyObject, findIndex, shuffle } from "@/api/utils";
 import { playMode } from '@/api/config';
 import Toast from "@/baseUI/Toast/index";
 import PlayList from "./PlayList";
+import { getLyricRequest } from '@/api/request'
+import Lyric from '@/api/lyric-parser';
 
 function Player(props) {
 	const {
@@ -48,6 +50,9 @@ function Player(props) {
 	const [preSong, setPreSong] = useState({});
 	const [modeText, setModeText] = useState("");
 	const songReady = useRef(true);
+	const currentLyric = useRef();
+	const [currentPlayingLyric, setPlayingLyric] = useState("");
+	const currentLineNum = useRef(0);
 
 	const percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
 
@@ -79,6 +84,9 @@ function Player(props) {
 		audioRef.current.play();
 		e.stopPropagation();
 		togglePlayingDispatch(state);
+		if (currentLyric.current) {
+			currentLyric.current.togglePlay(currentTime * 1000);
+		}
 	};
 
 	const updateTime = e => {
@@ -91,6 +99,9 @@ function Player(props) {
 		audioRef.current.currentTime = newTime;
 		if (!playing) {
 			togglePlayingDispatch(true);
+		}
+		if (currentLyric.current) {
+			currentLyric.current.seek(newTime * 1000);
 		}
 	};
 
@@ -137,6 +148,36 @@ function Player(props) {
 		changeCurrentIndexDispatch(index);
 	};
 
+	const handleLyric = ({ lineNum, txt }) => {
+		if (!currentLyric.current) return;
+		currentLineNum.current = lineNum;
+		setPlayingLyric(txt);
+	};
+
+	const getLyric = id => {
+		let lyric = "";
+		if (currentLyric.current) {
+			currentLyric.current.stop();
+		}
+		// 避免 songReady 恒为 false 的情况
+		getLyricRequest(id)
+			.then(data => {
+				lyric = data.lrc.lyric;
+				if (!lyric) {
+					currentLyric.current = null;
+					return;
+				}
+				currentLyric.current = new Lyric(lyric, handleLyric);
+				currentLyric.current.play();
+				currentLineNum.current = 0;
+				currentLyric.current.seek(0);
+			})
+			.catch(() => {
+				songReady.current = true;
+				audioRef.current.play();
+			});
+	};
+
 	useEffect(() => {
 		if (
 			!playList.length ||
@@ -144,7 +185,7 @@ function Player(props) {
 			!playList[currentIndex] ||
 			playList[currentIndex].id === preSong.id ||
 			!songReady.current// 标志位为 false
-		){
+		) {
 			return;
 		}
 		let current = playList[currentIndex];
@@ -155,6 +196,7 @@ function Player(props) {
 		togglePlayingDispatch(true);// 播放状态
 		setCurrentTime(0);// 从头开始播放
 		setDuration((current.dt / 1000) | 0);// 时长
+		getLyric(current.id);
 		setTimeout(() => {
 			// 注意，play 方法返回的是一个 promise 对象
 			audioRef.current.play().then(() => {
@@ -202,6 +244,9 @@ function Player(props) {
 					changeMode={changeMode}
 					mode={mode}
 					togglePlayList={togglePlayListDispatch}
+					currentLyric={currentLyric.current}
+					currentPlayingLyric={currentPlayingLyric}
+					currentLineNum={currentLineNum.current}
 				/>
 			</>)}
 		</div>
