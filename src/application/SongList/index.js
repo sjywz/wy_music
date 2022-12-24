@@ -34,7 +34,7 @@ const SongsList = React.forwardRef((props, refs) => {
 	const collect = (count) => {
 		return (
 			<div className="add_list">
-				<i className="iconfont">&#xe62d;</i>
+				<i className="iconfont">&#xe625;</i>
 				<span > 收藏 ({Math.floor(count / 1000) / 10} 万)</span>
 			</div>
 		)
@@ -43,7 +43,7 @@ const SongsList = React.forwardRef((props, refs) => {
 		<SongList ref={refs} showBackground={props.showBackground}>
 			<div className="first_line">
 				<div className="play_all" onClick={(e) => selectItem(e, 0)}>
-					<i className="iconfont">&#xe6e3;</i>
+					<i className="iconfont">&#xe625;</i>
 					<span > 播放全部 <span className="sum">(共 {totalCount} 首)</span></span>
 				</div>
 				{showCollect ? collect(collectCount) : null}

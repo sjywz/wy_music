@@ -110,7 +110,7 @@ function NormalPlayer(props) {
 				<div className="background layer"></div>
 				<Top className="top">
 					<div className="back" onClick={() => toggleFullScreen(false)}>
-						<i className="iconfont icon-back">&#xe662;</i>
+						<i className="iconfont icon-back">&#xea75;</i>
 					</div>
 					<h1 className="title">{song.name}</h1>
 					<h1 className="subtitle">{getName(song.ar)}</h1>
@@ -129,19 +129,19 @@ function NormalPlayer(props) {
 				<Bottom className="bottom">
 					<Operators>
 						<div className="icon i-left" >
-							<i className="iconfont">&#xe625;</i>
+							<i className="iconfont">&#xea75;</i>
 						</div>
 						<div className="icon i-left">
-							<i className="iconfont">&#xe6e1;</i>
+							<i className="iconfont">&#xe63c;</i>
 						</div>
 						<div className="icon i-center">
-							<i className="iconfont">&#xe723;</i>
+							<i className="iconfont">&#xe600;</i>
 						</div>
 						<div className="icon i-right">
-							<i className="iconfont">&#xe718;</i>
+							<i className="iconfont">&#xe63d;</i>
 						</div>
 						<div className="icon i-right">
-							<i className="iconfont">&#xe640;</i>
+							<i className="iconfont">&#xe674;</i>
 						</div>
 					</Operators>
 				</Bottom>

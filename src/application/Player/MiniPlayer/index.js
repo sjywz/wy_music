@@ -34,7 +34,7 @@ function MiniPlayer(props) {
 					<i className="iconfont">&#xe650;</i>
 				</div>
 				<div className="control">
-					<i className="iconfont">&#xe640;</i>
+					<i className="iconfont">&#xe674;</i>
 				</div>
 			</MiniPlayerContainer>
 		</CSSTransition>

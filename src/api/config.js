@@ -201,3 +201,5 @@ export const playMode = {
   loop: 1,
   random: 2
 };
+
+export const HEADER_HEIGHT = 45;
