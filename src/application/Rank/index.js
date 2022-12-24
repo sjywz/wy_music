@@ -7,32 +7,27 @@ import { Container, List, ListItem, SongList, EnterLoading } from './style';
 import Loading from '@/baseUI/loading';
 import { renderRoutes } from 'react-router-config'
 
-const renderRankList = (list, global) => {
-	const enterDetail = () => {
-
-	}
-	return (
-		<List globalRank={global}>
-			{
-				list.map((item) => {
-					return (
-						<ListItem 
-							key={item.id} 
-							tracks={item.tracks} 
-							onClick={() => enterDetail(item.name)}
-						>
-							<div className="img_wrapper">
-								<img src={item.coverImgUrl} alt="" />
-								<div className="decorate"></div>
-								<span className="update_frequecy">{item.updateFrequency}</span>
-							</div>
-							{renderSongList(item.tracks)}
-						</ListItem>
-					)
-				})
-			}
-		</List>
-	)
+const renderRankList = (list, enterDetail, global) => {	
+	return <List globalRank={global}>
+		{
+			list.map((item) => {
+				return (
+					<ListItem 
+						key={item.id} 
+						tracks={item.tracks} 
+						onClick={() => enterDetail(item)}
+					>
+						<div className="img_wrapper">
+							<img src={item.coverImgUrl} alt="" />
+							<div className="decorate"></div>
+							<span className="update_frequecy">{item.updateFrequency}</span>
+						</div>
+						{renderSongList(item.tracks)}
+					</ListItem>
+				)
+			})
+		}
+	</List>
 }
 
 const renderSongList = (list) => {
@@ -57,21 +52,25 @@ const Index = (props) => {
 	let officialList = rankList.slice(0, globalStartIndex);
 	let globalList = rankList.slice(globalStartIndex);
 
+	let displayStyle = loading ? { "display": "none" } : { "display": "" };
+
+	const enterDetail = (detail) => {
+		props.history.push (`/rank/${detail.id}`)
+	}
+
 	useEffect(() => {
 		if(!list.size) {
 			getRankListDataDispatch();
 		}
 	}, []);
 
-	let displayStyle = loading ? { "display": "none" } : { "display": "" };
-
 	return <Container>
 		<Scroll>
 			<div>
 				<h1 className="offical" style={displayStyle}> 官方榜 </h1>
-				{renderRankList(officialList)}
+				{renderRankList(officialList, enterDetail)}
 				<h1 className="global" style={displayStyle}> 全球榜 </h1>
-				{renderRankList(globalList, true)}
+				{renderRankList(globalList, enterDetail, true)}
 				{loading ? <EnterLoading><Loading></Loading></EnterLoading> : null}
 			</div>
 		</Scroll>
