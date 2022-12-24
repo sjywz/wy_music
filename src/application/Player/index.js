@@ -14,87 +14,12 @@ import NormalPlayer from "./normalPlayer";
 import { getSongUrl, isEmptyObject, findIndex, shuffle } from "@/api/utils";
 import { playMode } from '@/api/config';
 import Toast from "@/baseUI/Toast/index";
-
-const playList = [
-	{
-		ftype: 0,
-		djId: 0,
-		a: null,
-		cd: '01',
-		crbt: null,
-		no: 1,
-		st: 0,
-		rt: '',
-		cf: '',
-		alia: [
-			'手游《梦幻花园》苏州园林版推广曲'
-		],
-		rtUrls: [],
-		fee: 0,
-		s_id: 0,
-		copyright: 0,
-		h: {
-			br: 320000,
-			fid: 0,
-			size: 9400365,
-			vd: -45814
-		},
-		mv: 0,
-		al: {
-			id: 84991301,
-			name: '拾梦纪',
-			picUrl: 'http://p1.music.126.net/M19SOoRMkcHmJvmGflXjXQ==/109951164627180052.jpg',
-			tns: [],
-			pic_str: '109951164627180052',
-			pic: 109951164627180050
-		},
-		name: '拾梦纪',
-		l: {
-			br: 128000,
-			fid: 0,
-			size: 3760173,
-			vd: -41672
-		},
-		rtype: 0,
-		m: {
-			br: 192000,
-			fid: 0,
-			size: 5640237,
-			vd: -43277
-		},
-		cp: 1416668,
-		mark: 0,
-		rtUrl: null,
-		mst: 9,
-		dt: 234947,
-		ar: [
-			{
-				id: 12084589,
-				name: '妖扬',
-				tns: [],
-				alias: []
-			},
-			{
-				id: 12578371,
-				name: '金天',
-				tns: [],
-				alias: []
-			}
-		],
-		pop: 5,
-		pst: 0,
-		t: 0,
-		v: 3,
-		id: 1416767593,
-		publishTime: 0,
-		rurl: null
-	}
-];
+import PlayList from "./PlayList";
 
 function Player(props) {
-	const { 
+	const {
 		playing,
-		currentSong:immutableCurrentSong,
+		currentSong: immutableCurrentSong,
 		currentIndex,
 		playList: immutablePlayList,
 		mode,//播放模式
@@ -102,16 +27,17 @@ function Player(props) {
 		fullScreen
 	} = props;
 
-  const { 
-		toggleFullScreenDispatch, 
-		togglePlayingDispatch, 
-		changeCurrentIndexDispatch, 
+	const {
+		toggleFullScreenDispatch,
+		togglePlayingDispatch,
+		changeCurrentIndexDispatch,
 		changeCurrentDispatch,
 		changePlayListDispatch,//改变playList
 		changeModeDispatch,//改变mode
+		togglePlayListDispatch
 	} = props;
 
-	// const playList = immutablePlayList.toJS();
+	const playList = immutablePlayList.toJS();
 	const sequencePlayList = immutableSequencePlayList.toJS();
 	const currentSong = immutableCurrentSong.toJS();
 
@@ -121,6 +47,7 @@ function Player(props) {
 	const [duration, setDuration] = useState(0);
 	const [preSong, setPreSong] = useState({});
 	const [modeText, setModeText] = useState("");
+	const songReady = useRef(true);
 
 	const percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
 
@@ -180,7 +107,7 @@ function Player(props) {
 			handleNext();
 		}
 	};
-	
+
 	const handlePrev = () => {
 		//播放列表只有一首歌时单曲循环
 		if (playList.length === 1) {
@@ -192,7 +119,12 @@ function Player(props) {
 		if (!playing) togglePlayingDispatch(true);
 		changeCurrentIndexDispatch(index);
 	};
-	
+
+	const handleError = () => {
+		songReady.current = true;
+		alert("播放出错");
+	};
+
 	const handleNext = () => {
 		//播放列表只有一首歌时单曲循环
 		if (playList.length === 1) {
@@ -208,31 +140,43 @@ function Player(props) {
 	useEffect(() => {
 		if (
 			!playList.length ||
+			currentIndex === -1 ||
 			!playList[currentIndex] ||
-			playList[currentIndex].id === preSong.id 
+			playList[currentIndex].id === preSong.id ||
+			!songReady.current// 标志位为 false
 		){
 			return;
 		}
-		const current = playList[0];
-		changeCurrentDispatch(current);//赋值currentSong
+		let current = playList[currentIndex];
 		setPreSong(current);
-		setCurrentTime(0);//从头开始播放
-		setDuration((current.dt / 1000) | 0);//时长
+		songReady.current = false; // 把标志位置为 false, 表示现在新的资源没有缓冲完成，不能切歌
+		changeCurrentDispatch(current);// 赋值 currentSong
 		audioRef.current.src = getSongUrl(current.id);
-		// setTimeout(() => {
-		// 	audioRef.current.play();
-		// });
-		// togglePlayingDispatch(true);//播放状态
-	}, []);
+		togglePlayingDispatch(true);// 播放状态
+		setCurrentTime(0);// 从头开始播放
+		setDuration((current.dt / 1000) | 0);// 时长
+		setTimeout(() => {
+			// 注意，play 方法返回的是一个 promise 对象
+			audioRef.current.play().then(() => {
+				songReady.current = true;
+			});
+		});
+	}, [playList, currentIndex]);
 
 	useEffect(() => {
 		playing ? audioRef.current.play() : audioRef.current.pause();
 	}, [playing]);
 
-  return (
-    <div>
-			<audio ref={audioRef} onTimeUpdate={updateTime} onEnded={handleEnd}></audio>
-			<Toast text={modeText} ref={toastRef}></Toast>  
+	return (
+		<div>
+			<audio
+				ref={audioRef}
+				onTimeUpdate={updateTime}
+				onEnded={handleEnd}
+				onError={handleError}
+			></audio>
+			<Toast text={modeText} ref={toastRef}></Toast>
+			<PlayList />
 			{!isEmptyObject(currentSong) && (<>
 				<MiniPlayer
 					song={currentSong}
@@ -241,8 +185,9 @@ function Player(props) {
 					clickPlaying={clickPlaying}
 					percent={percent}
 					playing={playing}
+					togglePlayList={togglePlayListDispatch}
 				/>
-				<NormalPlayer 
+				<NormalPlayer
 					song={currentSong}
 					fullScreen={fullScreen}
 					toggleFullScreen={toggleFullScreenDispatch}
@@ -256,10 +201,11 @@ function Player(props) {
 					handleNext={handleNext}
 					changeMode={changeMode}
 					mode={mode}
+					togglePlayList={togglePlayListDispatch}
 				/>
 			</>)}
-    </div>
-  )
+		</div>
+	)
 }
 
 // 映射 Redux 全局的 state 到组件的 props 上
@@ -297,7 +243,7 @@ const mapDispatchToProps = dispatch => {
 		},
 		changePlayListDispatch(data) {
 			dispatch(changePlayList(data));
-		}
+		},
 	};
 };
 

@@ -7,6 +7,7 @@ import Scroll from "@/components/scroll";
 import { connect } from 'react-redux';
 import { getSingerInfo, changeEnterLoading } from "./store/actionCreators";
 import Loading from "@/baseUI/loading/index";
+import MusicNote from '@/baseUI/music-note/index'
 
 // 往上偏移的尺寸，露出圆角
 const OFFSET = 5;
@@ -34,6 +35,12 @@ function Singer(props) {
 	const layer = useRef();
 	// 图片初始高度
 	const initialHeight = useRef(0);
+
+	const musicNoteRef = useRef ();
+
+	const musicAnimation = (x, y) => {
+		musicNoteRef.current.startAnimation({ x, y });
+	};
 
 	const handleScroll = useCallback(pos => {
 		let height = initialHeight.current;
@@ -117,9 +124,11 @@ function Singer(props) {
 						<SongsList
 							songs={songs}
 							showCollect={false}
+							musicAnimation={musicAnimation}
 						></SongsList>
 					</Scroll>
 				</SongListWrapper>
+				<MusicNote ref={musicNoteRef}></MusicNote>
 				{ loading ? (<Loading></Loading>) : null}
 			</Container>
 		</CSSTransition>

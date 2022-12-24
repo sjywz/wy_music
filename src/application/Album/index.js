@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { changeEnterLoading, getAlbumList } from './store/actionCreators'
 import Loading from '@/baseUI/loading/index';
 import SongList from '@/application/SongList'
+import MusicNote from '@/baseUI/music-note/index'
 
 export const HEADER_HEIGHT = 45;
 
@@ -25,6 +26,12 @@ function Album(props) {
 	const id = props.match.params.id;
 	const { currentAlbum: currentAlbumImmutable, enterLoading } = props;
 	const { getAlbumDataDispatch } = props;
+
+	const musicNoteRef = useRef ();
+
+	const musicAnimation = (x, y) => {
+		musicNoteRef.current.startAnimation ({ x, y });
+	};
 
 	const currentAlbum = currentAlbumImmutable.toJS();
 
@@ -120,10 +127,16 @@ function Album(props) {
 						<div>
 							{renderTopDesc()}
 							{renderMenu()}
-							<SongList collectCount={currentAlbum.subscribedCount} showCollect songs={currentAlbum.tracks}/>
+							<SongList 
+								collectCount={currentAlbum.subscribedCount} 
+								showCollect 
+								songs={currentAlbum.tracks}
+								musicAnimation={musicAnimation}
+							/>
 						</div>
 					</Scroll>
 				)}
+				<MusicNote ref={musicNoteRef}></MusicNote>
 				{enterLoading ? <Loading></Loading> : null}
 			</Container>
 		</CSSTransition>
