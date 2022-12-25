@@ -29,7 +29,7 @@ function Search(props) {
 	// 控制动画
 	const [show, setShow] = useState(false);
 	const [query, setQuery] = useState('');
-	const musicNoteRef = useRef ();
+	const musicNoteRef = useRef();
 
 
 	const suggestList = immutableSuggestList.toJS();
@@ -49,7 +49,7 @@ function Search(props) {
 
 	const selectItem = (e, id) => {
 		getSongDetailDispatch(id);
-		musicNoteRef.current.startAnimation ({x:e.nativeEvent.clientX, y:e.nativeEvent.clientY});
+		musicNoteRef.current.startAnimation({ x: e.nativeEvent.clientX, y: e.nativeEvent.clientY });
 	}
 
 	useEffect(() => {
@@ -85,7 +85,7 @@ function Search(props) {
 				{
 					singers.map((item, index) => {
 						return (
-							<ListItem key={item.accountId+""+index} onClick={() => props.history.push (`/singers/${item.id}`)}>
+							<ListItem key={item.accountId + "" + index} onClick={() => props.history.push(`/singers/${item.id}`)}>
 								<div className="img_wrapper">
 									<img src={item.picUrl} width="100%" height="100%" alt="music" />
 								</div>
@@ -107,7 +107,7 @@ function Search(props) {
 				{
 					albums.map((item, index) => {
 						return (
-							<ListItem key={item.accountId+""+index} onClick={() => props.history.push (`/album/${item.id}`)}>
+							<ListItem key={item.accountId + "" + index} onClick={() => props.history.push(`/album/${item.id}`)}>
 								<div className="img_wrapper">
 									<img src={item.coverImgUrl} width="100%" height="100%" alt="music" />
 								</div>
@@ -127,7 +127,7 @@ function Search(props) {
 				{
 					songsList.map(item => {
 						return (
-							<li key={item.id} onClick={(e) => selectItem (e, item.id)}>
+							<li key={item.id} onClick={(e) => selectItem(e, item.id)}>
 								<div className="info">
 									<span>{item.name}</span>
 									<span>
@@ -201,9 +201,9 @@ const mapDispatchToProps = (dispatch) => {
 		getSuggestListDispatch(data) {
 			dispatch(getSuggestList(data));
 		},
-		getSongDetailDispatch (id) {
-      dispatch (getSongDetail (id));
-    }
+		getSongDetailDispatch(id) {
+			dispatch(getSongDetail(id));
+		}
 	}
 };
 
