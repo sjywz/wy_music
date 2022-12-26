@@ -30,6 +30,7 @@ const Header = React.forwardRef((props, ref) => {
 		<HeaderContainer ref={ref}>
 			<i className="iconfont back" onClick={handleClick}>&#xe602;</i>
 			{
+        // eslint-disable-next-line jsx-a11y/no-distracting-elements
         isMarquee ? <marquee><h1>{title}</h1></marquee>:
         <h1>{title}</h1>
       }

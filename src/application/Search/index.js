@@ -57,6 +57,7 @@ function Search(props) {
 		if (!hotList.size) {
 			getHotKeyWordsDispatch();
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const renderHotKey = () => {

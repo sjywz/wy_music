@@ -62,6 +62,7 @@ const Index = (props) => {
 		if(!list.size) {
 			getRankListDataDispatch();
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return <Container>

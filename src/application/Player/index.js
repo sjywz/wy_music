@@ -203,6 +203,7 @@ function Player(props) {
 				songReady.current = true;
 			});
 		});
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [playList, currentIndex]);
 
 	useEffect(() => {

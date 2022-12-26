@@ -53,7 +53,6 @@ function NormalPlayer(props) {
 	const { toggleFullScreen, clickPlaying, onProgressChange, handlePrev, handleNext, changeMode, togglePlayList } = props;
 	const {
 		currentLineNum,
-		currentPlayingLyric,
 		currentLyric
 	} = props;
 

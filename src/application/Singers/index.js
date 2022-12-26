@@ -70,6 +70,7 @@ const Index = (props) => {
     if (!singerList.size) {
       getHotSingerDispatch ();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <div>

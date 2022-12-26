@@ -97,6 +97,7 @@ function Singer(props) {
 	useEffect (() => {
 		const id = props.match.params.id;
 		getSingerDataDispatch(id);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 
